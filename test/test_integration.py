@@ -113,10 +113,15 @@ class TestIntegration(object):
         assert self.provs[1].rt_relations[0].dn == EPG_2
         assert self.provs[1].rt_relations[0].state
 
-        # Update rs-relation
+        # Update prov
         self.epgs[0].rs_relations.updates == []
-        self.provs[0].update('update')
-        self.epgs[0].rs_relations.updates == ['update']
+        self.provs[0].update('update/prov/1')
+        self.epgs[0].rs_relations.updates == ['update/prov/1']
+
+        # Update epg
+        self.provs[0].rt_relations[0].updates == []
+        self.epgs[1].update('update/epg/1')
+        self.provs[0].rt_relations[0].updates == ['update/epg/1']
 
         # Delete EPG without PROV
         self.provs[0].delete()

@@ -72,6 +72,12 @@ class Node(object):
             origp = get_db().find(entry.dn)
             origp.update_rs_relation(self, reason)
 
+        if self.rs_relations:
+            endp = get_db().find(self.rs_relations.dn)
+            if endp:
+                for entry in [x for x in endp.rt_relations[:] if x.dn == self.dn]:
+                    entry.update(reason)
+
     def delete(self):
         if self.rs_relations and self.rs_relations.dn:
             endp = get_db().find(self.rs_relations.dn)
