@@ -1,10 +1,10 @@
-from db import get_db
 from relation import Relation
 
 
 class Node(object):
 
     __RS_RELATIONS = []
+    DB = None
 
     @classmethod
     def append_relations(cls, endp_dn, origp):
@@ -29,16 +29,18 @@ class Node(object):
         return cls.__RS_RELATIONS
 
     def __init__(self, dn):
+        assert self.DB
+        assert dn
         self.dn = dn
         self.mo = dn
         self.updates = []
         self.rt_relations = []
         self.rs_relations = None
-        get_db().add(self)
+        self.DB.add(self)
         self.update_relations(self, 'create')
 
     def add_rs_relation(self, dn):
-        endp = get_db().find(dn)
+        endp = self.DB.find(dn)
         if endp is None:
             self.rs_relations = Relation(dn, "RS", False)
             self.append_relations(dn, self)
@@ -69,26 +71,26 @@ class Node(object):
     def update(self, reason):
         self.updates.append(reason)
         for entry in self.rt_relations:
-            origp = get_db().find(entry.dn)
+            origp = self.DB.find(entry.dn)
             origp.update_rs_relation(self, reason)
 
         if self.rs_relations:
-            endp = get_db().find(self.rs_relations.dn)
+            endp = self.DB.find(self.rs_relations.dn)
             if endp:
                 for entry in [x for x in endp.rt_relations[:] if x.dn == self.dn]:
                     entry.update(reason)
 
     def delete(self):
         if self.rs_relations and self.rs_relations.dn:
-            endp = get_db().find(self.rs_relations.dn)
+            endp = self.DB.find(self.rs_relations.dn)
             if endp is not None:
                 endp.update_rt_relation(self, 'delete')
             else:
                 self.remove_relations(self.rs_relations.dn, self)
 
         for entry in self.rt_relations:
-            origp = get_db().find(entry.dn)
+            origp = self.DB.find(entry.dn)
             origp.update_rs_relation(self, 'delete')
             self.append_relations(self.dn, origp)
 
-        get_db().delete(self.dn)
+        self.DB.delete(self.dn)

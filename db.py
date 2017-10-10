@@ -16,10 +16,3 @@ class DB(object):
     def delete(self, dn):
         print('Delete {0}'.format(dn))
         del self.dbase[dn]
-
-
-db = DB()
-
-
-def get_db():
-    return db
