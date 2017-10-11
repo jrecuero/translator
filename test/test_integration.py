@@ -62,7 +62,7 @@ class TestIntegration(object):
     def test_add_rs_relations_no_prov(self, prov, dbase, epgs, provs):
         # Create Rs-Relation without Prov
         epgs[0].add_rs_relation(prov)
-        assert Node.get_rs_relations() == [[prov, epgs[0]]]
+        assert Node.get_class_rs_relations() == [[prov, epgs[0]]]
         assert epgs[0].rs_relations is not None
         assert not epgs[0].rs_relations.state
         assert epgs[0].rs_relations.dn == prov
@@ -70,7 +70,7 @@ class TestIntegration(object):
         # Create Prov
         node1 = Node(prov)
         provs.append(node1)
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert epgs[0].rs_relations.state
         assert epgs[0].rs_relations.dn == prov
         assert len(provs[0].rt_relations) == 1
@@ -81,7 +81,7 @@ class TestIntegration(object):
     def test_add_rs_relations(self, dbase, epgs, provs):
         # Create Rs-Relation without Prov
         epgs[0].add_rs_relation(PROV_1)
-        assert Node.get_rs_relations() == [[PROV_1, epgs[0]]]
+        assert Node.get_class_rs_relations() == [[PROV_1, epgs[0]]]
         assert epgs[0].rs_relations is not None
         assert not epgs[0].rs_relations.state
         assert epgs[0].rs_relations.dn == PROV_1
@@ -89,7 +89,7 @@ class TestIntegration(object):
         # Create Prov
         node1 = Node(PROV_1)
         provs.append(node1)
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert epgs[0].rs_relations.state
         assert epgs[0].rs_relations.dn == PROV_1
         assert len(provs[0].rt_relations) == 1
@@ -100,7 +100,7 @@ class TestIntegration(object):
         node2 = Node(PROV_2)
         provs.append(node2)
         epgs[1].add_rs_relation(PROV_2)
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert epgs[1].rs_relations.state
         assert epgs[1].rs_relations.dn == PROV_2
         assert len(provs[1].rt_relations) == 1
@@ -109,7 +109,7 @@ class TestIntegration(object):
 
         # Create Rs-Relation with Same Prov
         epgs[2].add_rs_relation(PROV_2)
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert epgs[2].rs_relations.state
         assert epgs[2].rs_relations.dn == PROV_2
         assert len(provs[1].rt_relations) == 2
@@ -121,8 +121,8 @@ class TestIntegration(object):
         # Delete Prov
         provs[1].delete()
         del provs[1]
-        assert len(Node.get_rs_relations()) == 2
-        assert Node.get_rs_relations() == [[PROV_2, epgs[1]], [PROV_2, epgs[2]]]
+        assert len(Node.get_class_rs_relations()) == 2
+        assert Node.get_class_rs_relations() == [[PROV_2, epgs[1]], [PROV_2, epgs[2]]]
         assert not epgs[1].rs_relations.state
         assert epgs[1].rs_relations.dn == PROV_2
         assert not epgs[2].rs_relations.state
@@ -131,7 +131,7 @@ class TestIntegration(object):
         # Re-Create Prov
         node2 = Node(PROV_2)
         provs.append(node2)
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert epgs[1].rs_relations.state
         assert epgs[1].rs_relations.dn == PROV_2
         assert epgs[2].rs_relations.state
@@ -166,12 +166,12 @@ class TestIntegration(object):
         # Delete EPG without PROV
         provs[0].delete()
         del provs[0]
-        assert Node.get_rs_relations() == [[PROV_1, epgs[0]]]
+        assert Node.get_class_rs_relations() == [[PROV_1, epgs[0]]]
         assert not epgs[0].rs_relations.state
         assert epgs[0].rs_relations.dn == PROV_1
         epgs[0].delete()
         del epgs[0]
-        assert Node.get_rs_relations() == []
+        assert Node.get_class_rs_relations() == []
         assert dbase.find(EPG_1) is None
         assert dbase.find(PROV_1) is None
         assert len(epgs) == 1
