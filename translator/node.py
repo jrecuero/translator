@@ -1,4 +1,4 @@
-from relation import Relation
+from translator.relation import Relation
 
 
 class Node(object):

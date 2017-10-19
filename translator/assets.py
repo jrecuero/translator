@@ -1,4 +1,4 @@
-from node import Node
+from translator.node import Node
 
 
 class Epg(Node):

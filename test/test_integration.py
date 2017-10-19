@@ -1,12 +1,13 @@
-import sys
-import pytest
-
-src_path = '.'
-sys.path.append(src_path)
+# import sys
+# import pytest
+#
+# src_path = '.'
+# sys.path.append(src_path)
 
 # from db import DB, get_db
-from db import DB
-from node import Node
+import pytest
+from translator.db import DB
+from translator.node import Node
 
 
 EPG_1 = '/uni/epg/1'
